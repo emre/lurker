@@ -17,6 +17,9 @@ class BaseLurkerConfig(object):
     use_unicode = True
     charset = 'utf8'
 
+    # lurker options
+    ping_at_every_query = False
+
 
 
 
