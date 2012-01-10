@@ -5,6 +5,7 @@ import _mysql_exceptions
 
 from lurker_exceptions import *
 from configuration import BaseLurkerConfig
+from singleton import Singleton
 
 import functions
 
@@ -54,3 +55,5 @@ class Connection(object):
         return cursor.execute(query)
 
 
+class SingletonConnection(Singleton, Connection):
+    pass
