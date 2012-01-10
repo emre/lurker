@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-def class_to_dict(related_class):
+def configuration_class_to_dict(related_class):
     """
     fetchs public properties of an object and returns it as dictionary.
     """
     dictionary = {}
 
+    # blacklist
+    lurker_options = ["ping_at_every_query",]
+
     # __dict__ not used since it doesn't provide parent class's members.
     for key in dir(related_class):
-        if not key.startswith('_'):
+        if not key.startswith('_') and key not in lurker_options:
             dictionary.update({key: getattr(related_class, key)})
     return dictionary
