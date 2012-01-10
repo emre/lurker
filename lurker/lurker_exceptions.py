@@ -2,3 +2,6 @@
 
 class LurkerInvalidConfigurationObjectException(Exception):
     pass
+
+class LurkerNoConnectivityException(Exception):
+    pass
