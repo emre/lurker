@@ -1,4 +1,5 @@
-idea
-idea/*
+.idea
+.idea/*
 *.pyc
 *.tmp
+temp.py

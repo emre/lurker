@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class BaseConfig(object):
+class BaseLurkerConfig(object):
     """
     Base Configuration object for MySQL connections.This class is not intended to be used in this form. Another
     configuration object that extends this/BaseConfig must be passed to Connection object.
@@ -16,8 +16,6 @@ class BaseConfig(object):
     # mysql-python options
     use_unicode = True
     charset = 'utf8'
-
-    configuration_object_check = True
 
 
 

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from lurker_exceptions import LurkerInvalidConfigurationObjectException
+from configuration import BaseLurkerConfig
 
 class Connection(object):
 
     def __init__(self, Configuration):
-        if not hasattr(Configuration, 'configuration_object_check'):
+
+        # Configuration class must be extended from BaseLurkerConfig
+        if not issubclass(Configuration, BaseLurkerConfig):
             raise LurkerInvalidConfigurationObjectException('First parameter of the Connection object must be a '\
-                                                            'BaseConfig instance.')
+                                                            ' subclass of BaseLurkerConfig class.')
