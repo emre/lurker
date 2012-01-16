@@ -51,9 +51,51 @@ class Connection(object):
         return self.db_cursor
 
     def query(self, query):
+        """
+        executes the query and returns the cursor.
+        """
         cursor = self._get_cursor()
-        return cursor.execute(query)
+        cursor.execute(query)
+        return cursor
 
+    def get_results(self, query):
+        """
+        returns a list of rows based on query query.
+        """
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(query)
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+
+    def get_row(self, query):
+        """
+        returns a single row based on given query.
+        """
+        cursor = self._get_cursor()
+        try:
+            cursor.execute(query)
+
+            if cursor.rowcount > 1:
+                raise MultipleResultsFoundException('Multiple rows returned.')
+
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+
+    def debug(self):
+        # todo
+        pass
+
+    def iter(self):
+        """
+        returns a iterator based on query. returned data will be stored in server.
+        required for large result sets that doesn't fit into RAM.
+        """
+        # todo
+        cursor = self._get_cursor()
+        pass
 
 class SingletonConnection(Singleton, Connection):
     pass
