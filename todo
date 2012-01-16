@@ -1,0 +1,12 @@
+* connection
+    - query
+    - get_row
+    - get_results
+    - debug
+    - iter (server side cursor)
+
+* unit tests
+* row class
+* setup.py
+* pip upload maybe?
+* docs
