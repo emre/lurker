@@ -90,7 +90,7 @@ class Connection(object):
 
     def iter(self):
         """
-        returns a iterator based on query. returned data will be stored in server.
+        returns an iterator for the result set that stored in the server.
         required for large result sets that doesn't fit into RAM.
         """
         # todo
