@@ -60,7 +60,7 @@ class Connection(object):
 
     def get_results(self, query):
         """
-        returns a list of rows based on query query.
+        returns a list of rows based on given query.
         """
         cursor = self._get_cursor()
         try:
