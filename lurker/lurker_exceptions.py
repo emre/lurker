@@ -5,3 +5,6 @@ class LurkerInvalidConfigurationObjectException(Exception):
 
 class LurkerNoConnectivityException(Exception):
     pass
+
+class MultipleResultsFoundException(Exception):
+    pass
