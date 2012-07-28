@@ -12,18 +12,37 @@ import functions
 
 class Connection(object):
 
-    def __init__(self, configuration):
+    def __init__(self, configuration=None):
 
-        # Configuration class must be extended from BaseLurkerConfig
-        if not issubclass(configuration, BaseLurkerConfig):
-            raise LurkerInvalidConfigurationObjectException('First parameter of the Connection object must be a '\
-                                                            ' subclass of BaseLurkerConfig class.')
-        self.configuration = configuration
-
-        self.db_arguments = functions.configuration_class_to_dict(configuration)
         self.db_connection = None
 
+        if configuration:
+            # Configuration class must be extended from BaseLurkerConfig
+            if not issubclass(configuration, BaseLurkerConfig):
+                raise LurkerInvalidConfigurationObjectException('First parameter of the Connection object must be a '\
+                                                                ' subclass of BaseLurkerConfig class.')
+            self.configuration = configuration
+            self.db_arguments = functions.configuration_class_to_dict(configuration)
+            self.connect()
+
+    def quick_connect(self, user, passwd, dbname, host="localhost", port=3306):
+        """
+        Provides a simple way to connect database instead of dealing with Configuration objects.
+        """
+        configuration = BaseLurkerConfig
+        self.db_arguments = functions.configuration_class_to_dict(configuration)
+        self.db_arguments.update({
+            'host': host,
+            'user': user,
+            'passwd': passwd,
+            'db': dbname,
+            'port': port,
+        })
+
+        self.configuration = configuration
         self.connect()
+
+        return self
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
