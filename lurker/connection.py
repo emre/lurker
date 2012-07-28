@@ -9,6 +9,7 @@ from singleton import Singleton
 
 import functions
 
+
 class Connection(object):
 
     def __init__(self, configuration):
@@ -27,7 +28,7 @@ class Connection(object):
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
 
-    def _get_cursor(self):
+    def _get_cursor(self, server_side=False):
         """
         returns emulated cursor from mySQLDB library
         mostly, not intended to be used from the outside of the class.
@@ -45,18 +46,20 @@ class Connection(object):
             except _mysql_exceptions.InterfaceError:
                 self.connect()
 
-        if not hasattr(self, 'db_cursor'):
-            self.db_cursor = self.db_connection.cursor()
+        if server_side:
+            return MySQLdb.cursors.SSCursor(self.db_connection)
+        return self.db_connection.cursor()
 
-        return self.db_cursor
-
-    def query(self, query):
+    def execute(self, query, parameters=None):
         """
-        executes the query and returns the cursor.
+        executes the query and returns the row count.
         """
-        cursor = self._get_cursor()
-        cursor.execute(query)
-        return cursor
+        try:
+            cursor = self._get_cursor()
+            cursor.execute(query, parameters)
+            return cursor.rowcount
+        finally:
+            cursor.close()
 
     def get_results(self, query):
         """
@@ -84,18 +87,20 @@ class Connection(object):
         finally:
             cursor.close()
 
-    def debug(self):
-        # todo
-        pass
-
-    def iter(self):
+    def iterate(self, query, parameters=None):
         """
         returns an iterator for the result set that stored in the server.
-        required for large result sets that doesn't fit into RAM.
+        should be used for large result set(s) that doesn't fit into RAM.
         """
         # todo
-        cursor = self._get_cursor()
-        pass
+        cursor = self._get_cursor(True)
+        try:
+            cursor.execute(query, parameters)
+            for row in cursor:
+                yield row
+        finally:
+            cursor.close()
+
 
 class SingletonConnection(Singleton, Connection):
     pass
