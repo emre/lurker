@@ -16,25 +16,29 @@ todo
 
 Connecting to Database
 ======
-    class DatabaseConfig(BaseLurkerConfig):
-        host = 'localhost'
-        user = 'root'
-        passwd = ''
-        db = ''
-  
-    connection = Connection(DbConfig)
+``` python
+class DatabaseConfig(BaseLurkerConfig):
+    host = 'localhost'
+    user = 'root'
+    passwd = ''
+    db = ''
+
+connection = Connection(DbConfig)
+```
 
 Sending Queries
 ======
-    # salt query
-    connection.execute("INSERT INTO table_name (name) VALUES (%s)", ['Selami Sahin', ])
+``` python
+# salt query
+connection.execute("INSERT INTO table_name (name) VALUES (%s)", ['Selami Sahin', ])
 
-    # returns a result set
-    all_people = connection.get_results("SELECT * FROM people")
+# returns a result set
+all_people = connection.get_results("SELECT * FROM people")
 
-    # server-side cursor
-    for person in connection.iterate("SELECT * FROM people"):
-        print person
+# server-side cursor
+for person in connection.iterate("SELECT * FROM people"):
+    print person
+```
 
 Authors
 ======
