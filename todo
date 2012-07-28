@@ -1,14 +1,3 @@
-* connection
-    - query
-    - get_row
-    - get_results
-    - debug
-    - iter (server side cursor)
-
-* pagination helper
-* connection pooling
-* unit tests
-* row class
-* setup.py
-* pip upload maybe?
-* docs
+* transactions
+* caching
+* pip
