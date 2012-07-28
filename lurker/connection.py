@@ -2,6 +2,7 @@
 
 import MySQLdb
 import _mysql_exceptions
+import re
 
 from lurker_exceptions import *
 from configuration import BaseLurkerConfig
@@ -76,7 +77,14 @@ class Connection(object):
         try:
             cursor = self._get_cursor()
             cursor.execute(query, parameters)
-            return cursor.rowcount
+            # based on the query start statement, return rowcount or affectedrows
+            match = re.search('^(insert|delete|update|drop|truncate|replace|create|alter)\s+', query, flags=re.IGNORECASE)
+            if match:
+                sub_match = re.search('^insert\s', query, flags=re.IGNORECASE)
+                if sub_match:
+                    return cursor.lastrowid
+                return cursor.rowcount
+
         finally:
             cursor.close()
 
