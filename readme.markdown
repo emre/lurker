@@ -45,8 +45,11 @@ connection = Connection().quick_connect("mysql_user", "mysql_passwd", "db_name",
 Sending Queries
 --------
 ``` python
-# salt query
+# returns last_id
 connection.execute("INSERT INTO table_name (name) VALUES (%s)", ['Selami Sahin', ])
+
+# returns row count
+connection.execute("UPDATE table_name SET name = %s", ["Muhittin Bosat", ])
 
 # returns a result set
 all_people = connection.get_results("SELECT * FROM people")
