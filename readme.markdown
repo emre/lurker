@@ -14,8 +14,15 @@ Configuration options
 ======
 todo
 
-Connecting to Database
+Quick Tutorial
 ======
+
+Connecting to the database
+--------
+
+* with Configuration objects. (This could be preferrable for seperating environments like DevConfig, ProdConfig, TestConfig)
+
+
 ``` python
 class DatabaseConfig(BaseLurkerConfig):
     host = 'localhost'
@@ -24,10 +31,19 @@ class DatabaseConfig(BaseLurkerConfig):
     db = ''
 
 connection = Connection(DbConfig)
+
+```
+
+* without Configuration objects
+
+```python
+
+connection = Connection().quick_connect("mysql_user", "mysql_passwd", "db_name", "host")
+
 ```
 
 Sending Queries
-======
+--------
 ``` python
 # salt query
 connection.execute("INSERT INTO table_name (name) VALUES (%s)", ['Selami Sahin', ])
@@ -39,6 +55,8 @@ all_people = connection.get_results("SELECT * FROM people")
 for person in connection.iterate("SELECT * FROM people"):
     print person
 ```
+
+
 
 Authors
 ======
