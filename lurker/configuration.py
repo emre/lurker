@@ -2,6 +2,7 @@
 
 import MySQLdb.cursors
 
+
 class BaseLurkerConfig(object):
     """
     Base Configuration object for MySQL connections.This class is not intended to be used in this form. Another
@@ -22,7 +23,3 @@ class BaseLurkerConfig(object):
     # lurker options
     ping_at_every_query = False
     cursorclass = MySQLdb.cursors.DictCursor
-
-
-
-
