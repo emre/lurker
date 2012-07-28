@@ -1,9 +1,6 @@
 Lurker
 ======
-Lurker is a pythonic mysql wrapper built on the top of python-mySQLdb.
-
-Although existing mysql drivers provides solutions for most of your database needs, they do not have a pythonic/clean API. Lurker, a legendary unit of starcraft broodwar, is built to solve
-that problem.
+Lurker is a tiny mysql wrapper built on the top of python-mySQLdb.
 
 Installation
 ======
@@ -13,19 +10,37 @@ Requirements
 ======
 todo
 
-Introduction and examples
+Configuration options
 ======
 todo
 
-Issues
+Connecting to Database
 ======
-todo
+    class DatabaseConfig(BaseLurkerConfig):
+        host = 'localhost'
+        user = 'root'
+        passwd = ''
+        db = ''
+  
+    connection = Connection(DbConfig)
+
+Sending Queries
+======
+    # salt query
+    connection.execute("INSERT INTO table_name (name) VALUES (%s)", ['Selami Sahin', ])
+
+    # returns a result set
+    all_people = connection.get_results("SELECT * FROM people")
+
+    # server-side cursor
+    for person in connection.iterate("SELECT * FROM people"):
+        print person
 
 Authors
 ======
-todo
+Emre Yılmaz - [@emre_yilmaz](http://twitter.com/emre_yilmaz)
 
 License
 ======
-
+todo
 
