@@ -21,6 +21,8 @@ class Connection(object):
         if configuration:
             # Configuration class must be extended from BaseLurkerConfig
             if not issubclass(configuration, BaseLurkerConfig):
+                # always wanted to name exceptions like that
+                # deal with it
                 raise LurkerInvalidConfigurationObjectException('First parameter of the Connection object must be a '\
                                                                 ' subclass of BaseLurkerConfig class.')
             self.configuration = configuration
@@ -87,8 +89,8 @@ class Connection(object):
             if match:
                 sub_match = re.search('^insert\s', query, flags=re.IGNORECASE)
                 if sub_match:
-                    return cursor.lastrowid
-                return cursor.rowcount
+                    return int(cursor.lastrowid)
+                return int(cursor.rowcount)
 
         finally:
             cursor.close()
