@@ -98,7 +98,3 @@ Authors
 ======
 Emre Yılmaz - [@emre_yilmaz](http://twitter.com/emre_yilmaz)
 
-License
-======
-todo
-
