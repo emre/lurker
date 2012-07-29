@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 def configuration_class_to_dict(related_class):
     """
     fetchs public properties of an object and returns it as dictionary.

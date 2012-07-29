@@ -10,19 +10,12 @@ class BaseBackend(object):
     def get(self, key):
         raise NotImplementedError
 
-    def set(self, key, value, timeout = None):
+    def set(self, key, value, timeout=None):
         raise NotImplementedError
 
-    def build_query_key(self, query, parameters = None):
+    def build_query_key(self, query, parameters=None):
         if parameters:
             query = query % parameters
         m = hashlib.md5()
         m.update(query)
         return m.hexdigest()
-
-
-
-
-
-
-

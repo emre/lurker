@@ -93,7 +93,7 @@ class Connection(object):
         finally:
             cursor.close()
 
-    def _execute(self, cursor, query, parameters=None, fetch_type='all', cache = False):
+    def _execute(self, cursor, query, parameters=None, fetch_type='all', cache=False):
         if cache:
             key = self.cache.build_query_key(query, parameters)
             cache_result = self.cache.get(key)
@@ -122,8 +122,7 @@ class Connection(object):
 
         return result
 
-
-    def get_results(self, query, cache=False, parameters=None):
+    def get_results(self, query, parameters=None, cache=False):
         """
         returns a list of rows based on given query.
         """
@@ -133,7 +132,7 @@ class Connection(object):
         finally:
             cursor.close()
 
-    def get_row(self, query, cache=False, parameters=None,):
+    def get_row(self, query, parameters=None, cache=False):
         """
         returns a single row based on given query.
         """
