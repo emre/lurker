@@ -6,14 +6,6 @@ Installation
 ======
 todo
 
-Requirements
-======
-todo
-
-Configuration options
-======
-todo
-
 Quick Tutorial
 ======
 
@@ -54,12 +46,46 @@ connection.execute("UPDATE table_name SET name = %s", ["Muhittin Bosat", ])
 # returns a result set
 all_people = connection.get_results("SELECT * FROM people")
 
+# returns a row
+one_people = connection.get_row("SELECT * FROM people WHERE id = 1")
+
 # server-side cursor
 for person in connection.iterate("SELECT * FROM people"):
     print person
 ```
 
+Query Caching Support with Redis
+--------
+* In order to activate caching support, you need to set cache and cache_information variables in your config class.
 
+``` python
+class DbConfig(BaseLurkerConfig):
+    host = 'localhost'
+    user = 'root'
+    passwd = 'passwd'
+    db = 'db_name'
+    cache = True
+    cache_information = {
+        'backend': RedisBackend,
+        'args': (),
+        'kwargs': {'host': 'localhost', 'port': 6379, 'db': 0},
+    }
+```
+
+* Usage in get_results and get_row
+
+``` python
+
+print connection.get_row("SELECT * FROM people WHERE id = %s", parameters=(1,), cache=30)
+print connection.get_row("SELECT * FROM people WHERE id = %s", parameters=(1,), cache=30)
+
+# output
+# DEBUG:root:cache miss: SELECT * FROM people WHERE id = %s
+# {'id': 1L, 'name': u'Emre Yilmaz'}
+# DEBUG:root:cache hit: SELECT * FROM people WHERE id = %s
+# {u'id': 1, u'name': u'Emre Yilmaz'}
+
+```
 
 Authors
 ======
