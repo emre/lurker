@@ -12,7 +12,7 @@ except ImportError:
 class RedisBackend(BaseBackend):
 
     def __init__(self, host='localhost', port=6379, db=0):
-        self.redis_connection = redis.StrictRedis(host='localhost', port=6379, db=0)
+        self.redis_connection = redis.StrictRedis(host=host, port=port, db=db)
 
     def get(self, key):
         value = self.redis_connection.get(key)
