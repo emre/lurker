@@ -9,6 +9,7 @@ from configuration import BaseLurkerConfig
 from singleton import Singleton
 
 import functions
+import logging
 
 
 class Connection(object):
@@ -23,7 +24,11 @@ class Connection(object):
                 raise LurkerInvalidConfigurationObjectException('First parameter of the Connection object must be a '\
                                                                 ' subclass of BaseLurkerConfig class.')
             self.configuration = configuration
+            if self.configuration.cache and self.configuration.cache_information:
+                related_backend = self.configuration.cache_information.get("backend")
+                self.cache = related_backend(*self.configuration.cache_information.get("args"), **self.configuration.cache_information.get("kwargs"))
             self.db_arguments = functions.configuration_class_to_dict(configuration)
+
             self.connect()
 
     def quick_connect(self, user, passwd, dbname, host="localhost", port=3306):
@@ -74,8 +79,8 @@ class Connection(object):
         """
         executes the query and returns the row count.
         """
+        cursor = self._get_cursor()
         try:
-            cursor = self._get_cursor()
             cursor.execute(query, parameters)
             # based on the query start statement, return rowcount or affectedrows
             match = re.search('^(insert|delete|update|drop|truncate|replace|create|alter)\s+', query, flags=re.IGNORECASE)
@@ -88,29 +93,53 @@ class Connection(object):
         finally:
             cursor.close()
 
-    def get_results(self, query):
+    def _execute(self, cursor, query, parameters=None, fetch_type='all', cache = False):
+        if cache:
+            key = self.cache.build_query_key(query, parameters)
+            cache_result = self.cache.get(key)
+            if not cache_result:
+                logging.debug("cache miss: %s" % query)
+                cursor.execute(query, parameters)
+                if fetch_type == 'all':
+                    result = cursor.fetchall()
+                else:
+                    if cursor.rowcount > 1:
+                        raise MultipleResultsFoundException('Multiple rows returned.')
+                    result = cursor.fetchone()
+                # update cache
+                self.cache.set(key, result, cache)
+            else:
+                logging.debug("cache hit: %s" % query)
+                return cache_result
+
+        cursor.execute(query, parameters)
+        if fetch_type == 'all':
+            result = cursor.fetchall()
+        else:
+            if cursor.rowcount > 1:
+                raise MultipleResultsFoundException('Multiple rows returned.')
+            result = cursor.fetchone()
+
+        return result
+
+
+    def get_results(self, query, cache=False, parameters=None):
         """
         returns a list of rows based on given query.
         """
         cursor = self._get_cursor()
         try:
-            cursor.execute(query)
-            return cursor.fetchall()
+            return self._execute(cursor, query, parameters, 'all', cache)
         finally:
             cursor.close()
 
-    def get_row(self, query):
+    def get_row(self, query, cache=False, parameters=None,):
         """
         returns a single row based on given query.
         """
         cursor = self._get_cursor()
         try:
-            cursor.execute(query)
-
-            if cursor.rowcount > 1:
-                raise MultipleResultsFoundException('Multiple rows returned.')
-
-            return cursor.fetchone()
+            return self._execute(cursor, query, parameters, 'one', cache)
         finally:
             cursor.close()
 
@@ -119,7 +148,6 @@ class Connection(object):
         returns an iterator for the result set that stored in the server.
         should be used for large result set(s) that doesn't fit into RAM.
         """
-        # todo
         cursor = self._get_cursor(True)
         try:
             cursor.execute(query, parameters)
