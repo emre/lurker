@@ -59,6 +59,10 @@ Query Caching Support with Redis
 * In order to activate caching support, you need to set cache and cache_information variables in your config class.
 
 ``` python
+from lurker.configuration import BaseLurkerConfig
+from lurker.connection import Connection
+from lurker.cache.backends.redis_backend import RedisBackend
+
 class DbConfig(BaseLurkerConfig):
     host = 'localhost'
     user = 'root'
