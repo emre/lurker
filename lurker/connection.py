@@ -33,7 +33,7 @@ class Connection(object):
 
             self.connect()
 
-    def quick_connect(self, user, passwd, dbname, host="localhost", port=3306):
+    def quick_connect(self, user, passwd, dbname=None, host="localhost", port=3306):
         """
         Provides a simple way to connect database instead of dealing with Configuration objects.
         """
@@ -43,9 +43,11 @@ class Connection(object):
             'host': host,
             'user': user,
             'passwd': passwd,
-            'db': dbname,
             'port': port,
         })
+
+        if dbname:
+            self.db_arguments.update({'db': dbname})
 
         self.configuration = configuration
         self.connect()
