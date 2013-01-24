@@ -94,7 +94,11 @@ print connection.get_row("SELECT * FROM people WHERE id = %s", parameters=(1,), 
 
 ```
 
-Authors
+Maintainer
 ======
 Emre Yılmaz - [@emre_yilmaz](http://twitter.com/emre_yilmaz)
+
+Contributors
+=============
+Mirat Can Bayrak - [@mirat](http://twitter.com/mirat)
 
