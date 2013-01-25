@@ -56,6 +56,8 @@ class Connection(object):
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
+        if self.db_arguments.has_key("auto_commit"):
+            self.db_connection.autocommit(self.db_arguments.get("auto_commit"))
 
     def _get_cursor(self, server_side=False):
         """
