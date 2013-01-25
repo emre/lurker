@@ -91,6 +91,9 @@ class Connection(object):
                 cursor.executemany(query, parameters)
             else:
                 cursor.execute(query, parameters)
+                
+            if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
+                self.db_connection.commit()
             # based on the query start statement, return rowcount or affectedrows
             match = re.search('^(insert|delete|update|drop|truncate|replace|create|alter)\s+', query, flags=re.IGNORECASE)
             if match:
@@ -100,8 +103,6 @@ class Connection(object):
                 return int(cursor.rowcount)
 
         finally:
-            if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
-                self.db_connection.commit()
             cursor.close()
 
     def _execute(self, cursor, query, parameters=None, fetch_type='all', cache=False):
