@@ -56,7 +56,7 @@ class Connection(object):
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
-        if self.db_arguments.has_key("autocommit"):
+        if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
             self.db_connection.autocommit(True)
 
     def _get_cursor(self, server_side=False):
@@ -100,7 +100,8 @@ class Connection(object):
                 return int(cursor.rowcount)
 
         finally:
-            self.db_connection.commit()
+            if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
+                self.db_connection.commit()
             cursor.close()
 
     def _execute(self, cursor, query, parameters=None, fetch_type='all', cache=False):
