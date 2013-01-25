@@ -8,7 +8,7 @@ def configuration_class_to_dict(related_class):
     dictionary = {}
 
     # blacklist
-    lurker_options = ["ping_at_every_query", 'cache_information', 'cache', ]
+    lurker_options = ["ping_at_every_query", 'cache_information', 'cache', 'autocommit', ]
 
     # __dict__ not used since it doesn't provide parent class's members.
     for key in dir(related_class):

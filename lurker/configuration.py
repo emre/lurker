@@ -15,7 +15,7 @@ class BaseLurkerConfig(object):
     passwd = ''
     db = ''
     port = 3306
-    auto_commit = True
+    autocommit = True
 
     # mysql-python options
     use_unicode = True

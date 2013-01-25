@@ -13,6 +13,7 @@ class TestLurker(unittest.TestCase):
 
     def setUp(self):
         self.connection = Connection(TestConfig)
+        self.connection.execute_many("INSERT INTO people(name) VALUES(%s)", [("1",), ("2",), ("3",)])
 
     def test_valid_configuration_class(self):
         assert isinstance(Connection(TestConfig), Connection)
@@ -45,7 +46,8 @@ class TestLurker(unittest.TestCase):
         self.assertRaises(MultipleResultsFoundException, self.connection.get_row, "SELECT * FROM people")
 
     def test_cache_operations(self):
-        query = "SELECT * FROM people WHERE id = 1"
+
+        query = "SELECT * FROM people LIMIT 1"
         retval = self.connection.get_row(query, cache=2)
 
         key = self.connection.cache.build_query_key(query)
@@ -53,6 +55,17 @@ class TestLurker(unittest.TestCase):
 
         time.sleep(3)
         assert self.connection.cache.get(key) == None
+        
+    def test_execute_many(self):
+
+        self.connection.execute_many("INSERT INTO people(name) VALUES(%s)", [("john",), ("brad",), ("richard",)])
+        
+        is_in = self.connection.get_results("SELECT * FROM people WHERE name  IN ('john', 'brad', 'richard')")
+        assert len(is_in) == 3
+        
+    def tearDown(self):
+        self.connection.execute("TRUNCATE TABLE people")
+        
 
 if __name__ == '__main__':
     unittest.main()

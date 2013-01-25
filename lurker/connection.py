@@ -56,8 +56,8 @@ class Connection(object):
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
-        if self.db_arguments.has_key("auto_commit"):
-            self.db_connection.autocommit(self.db_arguments.get("auto_commit"))
+        if self.db_arguments.has_key("autocommit"):
+            self.db_connection.autocommit(True)
 
     def _get_cursor(self, server_side=False):
         """
@@ -81,13 +81,16 @@ class Connection(object):
             return MySQLdb.cursors.SSCursor(self.db_connection)
         return self.db_connection.cursor()
 
-    def execute(self, query, parameters=None):
+    def execute(self, query, parameters=None, execute_many = False):
         """
         executes the query and returns the row count.
         """
         cursor = self._get_cursor()
         try:
-            cursor.execute(query, parameters)
+            if execute_many:
+                cursor.executemany(query, parameters)
+            else:
+                cursor.execute(query, parameters)
             # based on the query start statement, return rowcount or affectedrows
             match = re.search('^(insert|delete|update|drop|truncate|replace|create|alter)\s+', query, flags=re.IGNORECASE)
             if match:
@@ -97,6 +100,7 @@ class Connection(object):
                 return int(cursor.rowcount)
 
         finally:
+            self.db_connection.commit()
             cursor.close()
 
     def _execute(self, cursor, query, parameters=None, fetch_type='all', cache=False):
@@ -161,6 +165,12 @@ class Connection(object):
         finally:
             cursor.close()
 
+    def execute_many(self, query, parameters = None):
+        """
+        Executes a lot. I mean executes all of it. Unstoppable. Local hero. Better than good guy Greg.
+        """
+        return self.execute(query, parameters, True)
+        
 
 class SingletonConnection(Singleton, Connection):
     pass
