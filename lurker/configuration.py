@@ -24,6 +24,7 @@ class BaseLurkerConfig(object):
     # lurker options
     ping_at_every_query = False
     cursorclass = MySQLdb.cursors.DictCursor
+    supress_warnings = True
 
     # caching information
     cache = False

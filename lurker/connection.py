@@ -56,8 +56,14 @@ class Connection(object):
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
-        if self.db_arguments.has_key("autocommit") and self.db_arguments.get("autocommit"):
+
+        if self.configuration.autocommit:
             self.db_connection.autocommit(True)
+
+        if self.configuration.supress_warnings:
+            from warnings import filterwarnings
+            filterwarnings('ignore', category = MySQLdb.Warning)
+
 
     def _get_cursor(self, server_side=False):
         """
