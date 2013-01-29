@@ -56,7 +56,7 @@ class Connection(object):
 
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
-        if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
+        if self.db_arguments.has_key("autocommit") and self.db_arguments.get("autocommit"):
             self.db_connection.autocommit(True)
 
     def _get_cursor(self, server_side=False):
@@ -172,6 +172,7 @@ class Connection(object):
         Executes a lot. I mean executes all of it. Unstoppable. Local hero. Better than good guy Greg.
         """
         return self.execute(query, parameters, True)
+
         
 
 class SingletonConnection(Singleton, Connection):
