@@ -102,7 +102,7 @@ Contributors
 =============
 Mirat Can Bayrak - [@mirat](http://twitter.com/mirat)
 
-Projects/Scripts built with lurker
+Projects/Scripts powered by lurker
 ====================================
  - Database Copy: https://gist.github.com/4686232#file-db_copy-py
 
