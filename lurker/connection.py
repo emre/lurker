@@ -14,6 +14,9 @@ import logging
 
 class Connection(object):
 
+    def __repr__(self):
+        return "<Lurker Connection instance - %s>" % id(self)
+
     def __init__(self, configuration=None):
 
         self.db_connection = None
