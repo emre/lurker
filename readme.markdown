@@ -4,6 +4,21 @@ Lurker is a tiny mysql wrapper built on the top of python-mySQLdb.
 
 Installation
 ======
+
+install via pip
+
+```
+pip install lurker
+```
+
+or easy_install if you like 90's.
+
+```
+easy_install lurker
+```
+
+or latest master branch
+
 ```
 git clone git://github.com/emre/lurker.git
 python setup.py install
