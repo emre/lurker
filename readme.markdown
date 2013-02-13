@@ -2,6 +2,9 @@ Lurker
 ======
 Lurker is a tiny mysql wrapper built on the top of python-mySQLdb.
 
+<img src="https://raw.github.com/emre/lurker/master/lurker.jpg" />
+
+
 Installation
 ======
 
