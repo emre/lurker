@@ -60,8 +60,9 @@ class Connection(object):
     def connect(self):
         self.db_connection = MySQLdb.connect(**self.db_arguments)
 
-        if self.configuration.autocommit:
-            self.db_connection.autocommit(True)
+        self.db_connection.autocommit(self.configuration.autocommit)
+        if not self.configuration.autocommit:
+            self.execute("SET autocommit=0")
 
         if self.configuration.supress_warnings:
             from warnings import filterwarnings
@@ -100,9 +101,7 @@ class Connection(object):
                 cursor.executemany(query, parameters)
             else:
                 cursor.execute(query, parameters)
-                
-            if self.db_arguments.has_key("auto_commit") and self.db_arguments.get("autocommit"):
-                self.db_connection.commit()
+
             # based on the query start statement, return rowcount or affectedrows
             match = re.search('^(insert|delete|update|drop|truncate|replace|create|alter)\s+', query, flags=re.IGNORECASE)
             if match:

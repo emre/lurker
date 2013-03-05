@@ -10,6 +10,7 @@ from lurker.connection import Connection
 from lurker.lurker_exceptions import LurkerInvalidConfigurationObjectException, LurkerNoConnectivityException, MultipleResultsFoundException
 from _mysql_exceptions import ProgrammingError
 
+
 class TestLurker(unittest.TestCase):
 
     def setUp(self):
@@ -63,14 +64,25 @@ class TestLurker(unittest.TestCase):
         
         is_in = self.connection.get_results("SELECT * FROM people WHERE name  IN ('john', 'brad', 'richard')")
         assert len(is_in) == 3
-        
-        
+
     def test_false_insert(self):
         self.assertRaises(ProgrammingError, self.connection.execute, "INSERT INTO there_is_no_table_like_this(name)  VALUES(%s)", "aaa")
-        
+
+    def test_zauto_commit(self):
+        TestConfig.autocommit = False
+        connection = Connection(TestConfig)
+        connection.execute("BEGIN")
+        connection.execute("INSERT INTO people(name) VALUES(%s)", ["yusufkoc"])
+        is_in = connection.get_results("SELECT * FROM people WHERE id =%s", ["yusufkoc", ])
+        assert len(is_in) == 0
+        connection.execute("COMMIT")
+        is_in = self.connection.get_results("SELECT * FROM people WHERE name = %s", ["yusufkoc", ])
+        assert len(is_in) == 1
+
+
     def tearDown(self):
-        self.connection.execute("TRUNCATE TABLE people")
-        
+        #  self.connection.execute("TRUNCATE TABLE people")
+        pass
 
 if __name__ == '__main__':
     unittest.main()
