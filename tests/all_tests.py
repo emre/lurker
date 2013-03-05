@@ -79,10 +79,8 @@ class TestLurker(unittest.TestCase):
         is_in = self.connection.get_results("SELECT * FROM people WHERE name = %s", ["yusufkoc", ])
         assert len(is_in) == 1
 
-
     def tearDown(self):
-        #  self.connection.execute("TRUNCATE TABLE people")
-        pass
+        self.connection.execute("TRUNCATE TABLE people")
 
 if __name__ == '__main__':
     unittest.main()
