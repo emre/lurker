@@ -43,7 +43,7 @@ class DatabaseConfig(BaseLurkerConfig):
     passwd = ''
     db = ''
 
-connection = Connection(DbConfig)
+connection = Connection(DatabaseConfig)
 
 ```
 
