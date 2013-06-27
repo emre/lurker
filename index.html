@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lurker by emre</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lurker</h1>
+        <p>a tiny wrapper for mySQLDB</p>
+        <p class="view"><a href="https://github.com/emre/lurker">View the Project on GitHub <small>emre/lurker</small></a></p>
+        <ul>
+          <li><a href="https://github.com/emre/lurker/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/emre/lurker/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/emre/lurker">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="lurker" class="anchor" href="#lurker"><span class="octicon octicon-link"></span></a>Lurker</h1>
+
+<p>Lurker is a tiny mysql wrapper built on the top of python-mySQLdb.</p>
+
+<p><img src="https://raw.github.com/emre/lurker/master/lurker.jpg"></p>
+
+<h1>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>install via pip</p>
+
+<pre><code>pip install lurker
+</code></pre>
+
+<p>or easy_install if you like 90's.</p>
+
+<pre><code>easy_install lurker
+</code></pre>
+
+<p>or latest master branch</p>
+
+<pre><code>git clone git://github.com/emre/lurker.git
+python setup.py install
+</code></pre>
+
+<h1>
+<a name="quick-tutorial" class="anchor" href="#quick-tutorial"><span class="octicon octicon-link"></span></a>Quick Tutorial</h1>
+
+<h2>
+<a name="connecting-to-the-database" class="anchor" href="#connecting-to-the-database"><span class="octicon octicon-link"></span></a>Connecting to the database</h2>
+
+<ul>
+<li>with Configuration objects. (This could be preferrable for seperating environments like DevConfig, ProdConfig, TestConfig)</li>
+</ul><div class="highlight"><pre><span class="k">class</span> <span class="nc">DatabaseConfig</span><span class="p">(</span><span class="n">BaseLurkerConfig</span><span class="p">):</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s">'localhost'</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="s">'root'</span>
+    <span class="n">passwd</span> <span class="o">=</span> <span class="s">''</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="s">''</span>
+
+<span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="n">DatabaseConfig</span><span class="p">)</span>
+
+</pre></div>
+
+<ul>
+<li>without Configuration objects</li>
+</ul><div class="highlight"><pre>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">()</span><span class="o">.</span><span class="n">quick_connect</span><span class="p">(</span><span class="s">"mysql_user"</span><span class="p">,</span> <span class="s">"mysql_passwd"</span><span class="p">,</span> <span class="s">"db_name"</span><span class="p">,</span> <span class="s">"host"</span><span class="p">)</span>
+
+</pre></div>
+
+<h2>
+<a name="sending-queries" class="anchor" href="#sending-queries"><span class="octicon octicon-link"></span></a>Sending Queries</h2>
+
+<div class="highlight"><pre><span class="c"># returns last_id</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO table_name (name) VALUES (</span><span class="si">%s</span><span class="s">)"</span><span class="p">,</span> <span class="p">[</span><span class="s">'Selami Sahin'</span><span class="p">,</span> <span class="p">])</span>
+
+<span class="c"># returns row count</span>
+<span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"UPDATE table_name SET name = </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="p">[</span><span class="s">"Muhittin Bosat"</span><span class="p">,</span> <span class="p">])</span>
+
+<span class="c"># returns a result set</span>
+<span class="n">all_people</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="s">"SELECT * FROM people"</span><span class="p">)</span>
+
+<span class="c"># returns a row</span>
+<span class="n">one_people</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">get_row</span><span class="p">(</span><span class="s">"SELECT * FROM people WHERE id = 1"</span><span class="p">)</span>
+
+<span class="c"># server-side cursor</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">connection</span><span class="o">.</span><span class="n">iterate</span><span class="p">(</span><span class="s">"SELECT * FROM people"</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">person</span>
+</pre></div>
+
+<h2>
+<a name="query-caching-support-with-redis" class="anchor" href="#query-caching-support-with-redis"><span class="octicon octicon-link"></span></a>Query Caching Support with Redis</h2>
+
+<ul>
+<li>In order to activate caching support, you need to set cache and cache_information variables in your config class.</li>
+</ul><div class="highlight"><pre><span class="kn">from</span> <span class="nn">lurker.configuration</span> <span class="kn">import</span> <span class="n">BaseLurkerConfig</span>
+<span class="kn">from</span> <span class="nn">lurker.connection</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">lurker.cache.backends.redis_backend</span> <span class="kn">import</span> <span class="n">RedisBackend</span>
+
+<span class="k">class</span> <span class="nc">DbConfig</span><span class="p">(</span><span class="n">BaseLurkerConfig</span><span class="p">):</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s">'localhost'</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="s">'root'</span>
+    <span class="n">passwd</span> <span class="o">=</span> <span class="s">'passwd'</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="s">'db_name'</span>
+    <span class="n">cache</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">cache_information</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'backend'</span><span class="p">:</span> <span class="n">RedisBackend</span><span class="p">,</span>
+        <span class="s">'args'</span><span class="p">:</span> <span class="p">(),</span>
+        <span class="s">'kwargs'</span><span class="p">:</span> <span class="p">{</span><span class="s">'host'</span><span class="p">:</span> <span class="s">'localhost'</span><span class="p">,</span> <span class="s">'port'</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> <span class="s">'db'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>Usage in get_results and get_row</li>
+</ul><div class="highlight"><pre>
+<span class="k">print</span> <span class="n">connection</span><span class="o">.</span><span class="n">get_row</span><span class="p">(</span><span class="s">"SELECT * FROM people WHERE id = </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">cache</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">connection</span><span class="o">.</span><span class="n">get_row</span><span class="p">(</span><span class="s">"SELECT * FROM people WHERE id = </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">cache</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c"># output</span>
+<span class="c"># DEBUG:root:cache miss: SELECT * FROM people WHERE id = %s</span>
+<span class="c"># {'id': 1L, 'name': u'Emre Yilmaz'}</span>
+<span class="c"># DEBUG:root:cache hit: SELECT * FROM people WHERE id = %s</span>
+<span class="c"># {u'id': 1, u'name': u'Emre Yilmaz'}</span>
+
+</pre></div>
+
+<h1>
+<a name="maintainer" class="anchor" href="#maintainer"><span class="octicon octicon-link"></span></a>Maintainer</h1>
+
+<p>Emre Yılmaz - <a href="http://twitter.com/emre_yilmaz">@emre_yilmaz</a></p>
+
+<h1>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h1>
+
+<p>Mirat Can Bayrak - <a href="http://twitter.com/mirat">@mirat</a></p>
+
+<h1>
+<a name="projectsscripts-powered-by-lurker" class="anchor" href="#projectsscripts-powered-by-lurker"><span class="octicon octicon-link"></span></a>Projects/Scripts powered by lurker</h1>
+
+<ul>
+<li>Database Copy: <a href="https://gist.github.com/4686232#file-db_copy-py">https://gist.github.com/4686232#file-db_copy-py</a>
+</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/emre">emre</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
