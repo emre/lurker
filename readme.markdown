@@ -123,4 +123,5 @@ Mirat Can Bayrak - [@mirat](http://twitter.com/mirat)
 Projects/Scripts powered by lurker
 ====================================
  - Database Copy: https://gist.github.com/4686232#file-db_copy-py
+ - Engine Converter: https://gist.github.com/emre/5849778
 
